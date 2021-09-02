@@ -11,7 +11,11 @@ class Host:
         return Host(data['url'], data['port'], data['protocol'], data['is_active'])
 
     def __repr__(self) -> str:
-        return f"{self.ip}:{self.port}"
+        return f"{self.protocol}://{self.ip}:{self.port}"
+    
+    def __str__(self):
+        return self.__repr__()
+
     def to_dict(self):
         return {
             "ip": self.ip,

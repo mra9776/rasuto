@@ -8,16 +8,20 @@ def test_list(proxy_list):
         test(item)
 
 TEST_URL = 'https://api.ipify.org?format=json'
-TIMEOUT = 1000
-def test():
+TIMEOUT = 10
+def test(url):
     try:
-        resp = requests.get(TEST_URL, timeout=TIMEOUT)
+        resp = requests.get(TEST_URL, timeout=TIMEOUT, 
+        proxies={
+            'https': url, 
+            'http': url
+        })
         if resp.status_code != 200:
             return False
         
         logger.debug(resp.json())
         return True
-    except:
+    except Exception as e:
         return False
         
     

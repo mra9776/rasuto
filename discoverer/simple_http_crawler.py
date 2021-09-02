@@ -5,8 +5,9 @@ from discoverer.base_crawler import BaseCrawler
 
 logger = logging.getLogger(__name__)
 
+
 class SimpleCrawler(BaseCrawler):
-    
+
     def start(self, proxies, parameters):
         sess = requests.session()
         url = 'https://raw.githubusercontent.com/scidam/proxy-list/master/proxy.json'
@@ -16,9 +17,19 @@ class SimpleCrawler(BaseCrawler):
         data = resp.json()
         proxies = data['proxies']
         logger.info('found %d item', len(proxies))
-        
-        s = sorted(proxies, key=lambda a: a.get('google_total_time'))
-        return (Host(item['ip'], int(item['port']), 'http', item['google_error'] == 'no') for item in s)
+
+        # s = sorted(
+        #     list(
+        #         filter(lambda a: a['google_error'] == 'no', proxies)),
+        #     key=lambda a: a.get('google_total_time'))
+        s = proxies
+        return (
+            Host(
+                item['ip'],
+                int(item['port']),
+                'http',
+                item['google_error'] == 'no'
+            )for item in s)
 
 
 # 'google_error':'no'
@@ -32,4 +43,3 @@ class SimpleCrawler(BaseCrawler):
 # 'yandex_error':'no'
 # 'yandex_status':200
 # 'yandex_total_time':12020
-                
