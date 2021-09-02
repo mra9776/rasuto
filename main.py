@@ -33,7 +33,7 @@ def main():
         item = futures[fut]
         if fut.result():
             goods.append(item)
-
+    pool.shutdown()
     for item in goods:
         print(str(item))
 
