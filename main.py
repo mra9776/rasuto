@@ -28,14 +28,19 @@ def main():
     futures = {}
     pool = ThreadPoolExecutor(max_workers=MAX_WORKER)
     for provider in proxy_providers:
-        futures.update({pool.submit(test, str(item)): item for item in provider})
+        futures.update({pool.submit(test, str(item))
+                       : item for item in provider})
     for fut in as_completed(futures):
         item = futures[fut]
-        if fut.result():
-            goods.append(item)
+        result = fut.result()
+        if result[0]:
+            goods.append((item, result[1]))
+
     pool.shutdown()
-    for item in goods:
+
+    for item in sorted(goods, key=lambda item: item[1]):
         print(str(item))
+
 
 if __name__ == '__main__':
     repository.sqlite_helper.init_connection()
